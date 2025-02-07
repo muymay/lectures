@@ -2,8 +2,6 @@
 
 (require racket/trace)
 
-(define (foo x y z)
-  (+ x (* y z)))
 
 (define (repeat n x)
   (if (= n 0)
@@ -35,9 +33,42 @@ Some useful built-in HOFs and related functions:
 
 ;; `apply` applies a function to lists
 
+( apply + '(1 2 3))
+( apply + 1 2 '(3))
 
 ;; `curry` gives us partial application
+(define curried-repeat (curry repeat))
+(define thrice (curry repeat 3))
+; out put is (thrice 'a) --> '(a a a)
 
+(define sabs (compose sqrt abs))
+
+(define (my-if test e1 e2)
+   (eval `(cond[,test ,e1]
+         [else ,e2])))
+
+;; "04-hofs.rkt"> (my-if  '(< 1 2) 
+;;                     '(println "true")
+;;                     '(println "false"))
+;; >"true" [output]
+
+;; delay
+(define p (delay (+ 1 2)))
+
+;;force
+(force p)
+
+(struct mypromise (thunk val) #:mutable)
+
+(define (my-delay sexp)
+        (mypromise (lambda () (eval sexp))
+                  #f))
+
+(define (my-force p)
+
+        (let ([res (mypromise-thunk p)])
+          (set-mypromise-val! p res)
+          res))
 
 ;; compose is a simple but powerful form of "functional "glue"
 
