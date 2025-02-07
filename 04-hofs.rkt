@@ -2,6 +2,20 @@
 
 (require racket/trace)
 
+(define (foo x y z)
+  (+ x (* y z)))
+
+(define (repeat n x)
+  (if (= n 0)
+      '()
+      (cons x (repeat (sub1 n) x))))
+
+
+(define (foo x)
+    (* 2 x ))
+
+(define (bar y)
+    (+ y 100))
 
 #|-----------------------------------------------------------------------------
 ;; Higher-order functions (HOFs)

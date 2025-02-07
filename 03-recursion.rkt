@@ -6,7 +6,7 @@
 ;; Recursion
 
 - what is a recursive function?
-
+()  - a function that calls itself (directly or indirectly)
 - what are some common "rules" for writing recursive functions?
 -----------------------------------------------------------------------------|#
 
@@ -53,6 +53,7 @@
 ;; Proofs of correctness
 
 - how can we prove that a structurally recursive function is correct?
+  
 
 - can we apply this to `factorial` and the other functions above?
 -----------------------------------------------------------------------------|#
@@ -68,12 +69,17 @@
 -----------------------------------------------------------------------------|#
 
 (define (factorial-tail n [acc 1])
-  (void))
+(void)
+  )
 
 ; (trace factorial-tail)
 
 (define (sum-from-to-tail m n [acc 0])
-  (void))
+  (if (> m n)
+      acc
+      (sum-from-to-tail (add1 m) n (+ m acc)))
+  )
+  ;; (trace sum-from-to-tail)
 
 ; (trace sum-from-to-tail)
 
@@ -92,22 +98,56 @@
 
 ;; concat: concatenate the elements of two lists
 (define (concat l1 l2)
-  (void))
+  (if (empty? l1)
+      l2
+      (cons (first l1)
+            (concat (rest l1) l2))))
+
+(trace concat)
+
 
 ;; count-elements: count the number of elements in a tree (a nested list)
 (define (count-elements tree)
-  (void)) ; recursive case
+  (cond  ; recursive case ; base case
+        [(empty? tree) 0]
+        [(not (pair? tree)) 1]
+        [else (+  (count-elements (car tree))
+                  (count-elements (cdr tree)))]))
+
+(trace count-elements)
 
 ;; repeat: create a list of n copies of x
 (define (repeat n x)
-  (void))
+  (if (= n 0) 
+      '()
+      (cons x (repeat (sub1 n) x))))
+
+(trace repeat)
+
+(define (repeat-list n lst)
+  (if (= n 0)
+      '()
+      (concat lst (repeat-list (sub1 n) lst))) ;concat itself is linear to get to the end to get to the end of the list each time in order to concat it
+)
 
 ;; reverse: reverse the elements of a list
 (define (reverse lst)
-  (void))
+  (if (empty? lst)
+      '()
+      (concat (reverse (rest lst)) 
+              (cons (first lst) '())))) ;; runtime O(n^2)
 
+(trace reverse) 
+
+(define (reverse-tail lst [acc '()])
+  (if (empty? lst)
+      acc
+      (reverse-tail (rest lst)
+                    (cons (first lst) acc)))) ;;linear time reverse
+
+(trace reverse-tail)
 #|-----------------------------------------------------------------------------
-;; Generative recursion
+;; Generative recursion aka. "algorithm"
 
 - what is generative recursion, and how does it differ from structural 
   recursion?
@@ -118,3 +158,5 @@
     [(= m 0) n]
     [(= n 0) m]
     [else (gcd n (remainder m n))]))
+
+(trace gcd)
