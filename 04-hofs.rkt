@@ -43,7 +43,7 @@ Some useful built-in HOFs and related functions:
   (if (= n 0)
       '()
       (cons x (repeat (- n 1) x))))
-
+(trace repeat)
 (define thrice (curry repeat 3))
 
 
